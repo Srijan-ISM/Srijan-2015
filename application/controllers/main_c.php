@@ -52,9 +52,9 @@ class Main_c extends CI_Controller {
 			case '7':$this->load->view('workarea/view_reg_team',array('count' => '0'));break;
 			case '8':
 			case '9':$this->load->view('workarea/validate_admin');break;
-			case '10':
-			case '11':
-			case '12':
+			case '10':$this->load->view('workarea/event_cat',array('error' => 'noerror'));break;
+			case '11':$this->load->view('workarea/enter_events',array('error' => 'noerror'));break;
+			case '12':$this->load->view('workarea/team_co',array('error' => 'noerror'));break;
 			case '13':
 			case '14':
 		}
@@ -126,5 +126,155 @@ else
 	$this->load->view('workarea/view_reg_team',$data);
 	
 	}
+
+public function data_return($ecid,$data_type)
+{
+	$this->load->view('workarea/data_return',array('ecid' => $ecid,'data_type' => $data_type));
+}
+public function add_func()
+{
+	$job_type = $this->input->post('job_type');
+	switch($job_type)
+	{
+		case 'event_category' :
+		$config=array(
+				array(
+				'field'=>'ec_name',
+				'label'=>'Event Name',
+				'rules'=>'trim|required|is_unique[events_category.ec_name]'
+				)
+				);
+				$this->form_validation->set_rules($config);
+	if($this->form_validation->run() ===FALSE)
+	{
+		$this->load->view('workarea/event_cat',array('error' => 'noerror'));
+	}
+	else
+	{
+		if($_FILES["userfile"]["tmp_name"]){
+		$config['upload_path'] = './event_cat_image/';
+		$config['allowed_types'] = 'gif|jpg|png';
+		$config['max_size']	= '2024';
+		$config['max_width']  = '1024';
+		$config['max_height']  = '768';
+
+		$this->load->library('upload', $config);
+			if ( ! $this->upload->do_upload())
+			{
+				$error = $this->upload->display_errors();
+				$this->load->view('workarea/event_cat',array('error' => $error));
+				
+			}
+			else
+			{
+				$data = $this->upload->data();
+		$this->db->insert('events_category',array('ec_name' => $this->input->post('ec_name'),'ec-pic' => $data['full_path'] ));
+		$this->load->view('workarea/event_cat',array('error' => 'success'));
+			}
+	}
+	else
+	{
+		$this->load->view('workarea/event_cat',array('error' => 'noimage'));
+	}
+	}
+	break;
+	case 'events':
+	$config=array(
+				array(
+				'field'=>'e_name',
+				'label'=>'Event Name',
+				'rules'=>'trim|required|is_unique[events.e_name]'
+				)
+				);
+				$this->form_validation->set_rules($config);
+	if($this->form_validation->run() ===FALSE)
+	{
+		$this->load->view('workarea/enter_events',array('error' => 'noerror'));
+	}
+	else
+	{
+		$this->db->insert('events',array('e_name' => $this->input->post('e_name')));
+		$this->load->view('workarea/enter_events',array('error' => 'success'));
+	}
+	break;
+	case 'co_team':
+	$config=array(
+				array(
+				'field'=>'team_name',
+				'label'=>'team Name',
+				'rules'=>'trim|required|is_unique[coordinator_team.team_name]'
+				),
+				array(
+				'field'=>'sequence',
+				'label'=>'Sequence',
+				'rules'=>'trim|required|is_unique[coordinator_team.sequence]'
+				)
+				);
+				$this->form_validation->set_rules($config);
+	if($this->form_validation->run() ===FALSE)
+	{
+		$this->load->view('workarea/team_co',array('error' => 'noerror'));
+	}
+	else
+	{
+		$this->db->insert('coordinator_team',array('team_name' => $this->input->post('team_name'),'sequence' => $this->input->post('sequence')));
+		$this->load->view('workarea/team_co',array('error' => 'successfully added a new team!'));
+	}
+	break;
 	
+	}
+}
+
+public function update_func()
+{
+	
+$job_type = $this->input->post('job_type');
+	switch($job_type)
+	{
+		case 'event_category' :
+		
+		if($_FILES["userfile"]["tmp_name"]){
+		$config['upload_path'] = './event_cat_image/';
+		$config['allowed_types'] = 'gif|jpg|png';
+		$config['max_size']	= '2024';
+		$config['max_width']  = '1024';
+		$config['max_height']  = '768';
+
+		$this->load->library('upload', $config);
+			if ( ! $this->upload->do_upload())
+			{
+				$error = $this->upload->display_errors();
+				$this->load->view('workarea/event_cat',array('error' => $error));
+				
+			}
+			else
+			{
+				$data = $this->upload->data();
+		$this->db->where(array('ecid' => $this->input->post('event_cat')));
+		$this->db->update('events_category',array('ec_name' => $this->input->post('ec_name'),'ec-pic' => $data['full_path']));
+		
+			}
+	}
+	else
+	{
+		$this->db->where(array('ecid' => $this->input->post('event_cat')));
+		$this->db->update('events_category',array('ec_name' => $this->input->post('ec_name')));
+	}
+	$this->load->view('workarea/event_cat',array('error' => 'update_successful'));
+	break;
+	
+	case 'events' :
+	$this->db->where(array('eid' => $this->input->post('event_name')));
+		$this->db->update('events',array('e_name' => $this->input->post('e_name')));
+	$this->load->view('workarea/enter_events',array('error' => 'update_successful'));
+	break;
+	case 'co_team':
+	$this->db->where(array('team_id' => $this->input->post('t_name')));
+		$this->db->update('coordinator_team',array('team_name' => $this->input->post('team_name'),'sequence' => $this->input->post('sequence')));
+	$this->load->view('workarea/team_co',array('error' => 'update_successful'));
+	break;
+	
+	}
+}	
+
 }

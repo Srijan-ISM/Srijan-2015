@@ -72,4 +72,7 @@ else
 	$query= $this->db->get($table);
 return $query;
 	}
+	
+	
+	
 }

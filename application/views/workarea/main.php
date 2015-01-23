@@ -153,9 +153,8 @@ else
 <a href="<?php echo base_url('index.php/main_c/work/10'); ?>" target="myframe"><div class="over" id="func10">&nbsp Add/Update Event Category</div></a>
 <a href="<?php echo base_url('index.php/main_c/work/11'); ?>" target="myframe"><div class="over" id="func11">&nbsp Add/Update Events</div></a>
 <a href="<?php echo base_url('index.php/main_c/work/12'); ?>" target="myframe"><div class="over" id="func12">&nbsp Add/Update Team Coordinaters</div></a>
-<a href="<?php echo base_url('index.php/main_c/work/13'); ?>" target="myframe"><div class="over" id="func13">&nbsp Add/Update Team Members</div></a>
-<a href="<?php echo base_url('index.php/main_c/work/14'); ?>" target="myframe"><div class="over" id="func14">&nbsp Add/Update Nickname Genre</div></a>
-<a href="<?php echo base_url('index.php/main_c/work/15'); ?>" target="myframe"><div class="over" id="func15">&nbsp Add/Update Nick Names</div></a>
+<a href="<?php echo base_url('index.php/main_c/work/13'); ?>" target="myframe"><div class="over" id="func14">&nbsp Add/Update Nickname Genre</div></a>
+<a href="<?php echo base_url('index.php/main_c/work/14'); ?>" target="myframe"><div class="over" id="func15">&nbsp Add/Update Nick Names</div></a>
 
 
 </div>
